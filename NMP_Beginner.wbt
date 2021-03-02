@@ -311,6 +311,10 @@ DEF ROBOT_RED Robot {
   translation -0.21211 0 0.21209
   rotation 0 1 0 2.3561996938995744
   children [
+    Gyro {
+    }
+    Accelerometer {
+    }
     Lidar {
     }
     DEF MAIN_BODY Transform {
@@ -341,7 +345,7 @@ DEF ROBOT_RED Robot {
         }
       ]
       endPoint DEF LEFT_WHEEL Solid {
-        translation -0.02999999999999918 0.025 0
+        translation -0.029999999999999152 0.025 0
         rotation 1 0 0 4.813412919008581
         children [
           DEF WHEEL Transform {
