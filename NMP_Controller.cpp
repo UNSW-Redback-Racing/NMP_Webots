@@ -12,6 +12,8 @@
 #include <webots/Motor.hpp>
 #include <webots/DistanceSensor.hpp>
 #include <webots/Camera.hpp>
+#include <webots/Accelerometer.hpp>
+#include <webots/Gyro.hpp>
 #include <limits>
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -41,8 +43,9 @@ int main(int argc, char **argv) {
   DistanceSensor *rightDs = robot->getDistanceSensor("ds0");
   DistanceSensor *leftFrontLeftDs = robot->getDistanceSensor("ds5");
   DistanceSensor *rightFrontRightDs= robot->getDistanceSensor("ds4");
-
   Camera * cam = robot->getCamera("camera");
+  Accelerometer * accelerometer = robot->getAccelerometer("accelerometer");
+  Gyro *gyro = robot->getGyro("gyro");
 
   // get the time step of the current world.
   int timeStep = (int)robot->getBasicTimeStep();
@@ -56,20 +59,23 @@ int main(int argc, char **argv) {
   rightDs->enable(100);
   leftFrontLeftDs->enable(100);
   rightFrontRightDs->enable(100);
+  accelerometer->enable(100);
+  gyro->enable(100);
   cam->enable(50);
   
   lmotor->setPosition(std::numeric_limits<double>::infinity());
   rmotor->setPosition(std::numeric_limits<double>::infinity());
-  lmotor->setVelocity(10);
-  rmotor->setVelocity(10);
+  lmotor->setVelocity(0);
+  rmotor->setVelocity(0);
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
   while (robot->step(timeStep) != -1) {
     // Read the sensors:
     // Enter here functions to read sensor data, like:
     //  double val = ds->getValue();
-
-    // Process sensor data here.
+    lmotor->setVelocity(10);
+    rmotor->setVelocity(10);
+     // Process sensor data here.
 
     // Enter here functions to send actuator commands, like:
     //  motor->setPosition(10.0);
