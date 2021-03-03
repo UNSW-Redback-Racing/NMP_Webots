@@ -4,7 +4,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.816911894310475 0.46608260607001883 0.33973807742590634 4.876958503598818
-  position -1.081276706163958 3.941972682380378 1.0664106287662232
+  position -1.1184377059078425 4.095089639062794 1.1088953422250207
 }
 TexturedBackground {
 }
@@ -345,7 +345,7 @@ DEF ROBOT_RED Robot {
         }
       ]
       endPoint DEF LEFT_WHEEL Solid {
-        translation -0.029999999999999152 0.025 0
+        translation -0.029999999999999083 0.025 0
         rotation 1 0 0 4.813412919008581
         children [
           DEF WHEEL Transform {
@@ -400,7 +400,7 @@ DEF ROBOT_RED Robot {
         }
       ]
       endPoint DEF RIGHT_WHEEL Solid {
-        translation 0.030000000000000013 0.025 0
+        translation 0.029999999999999992 0.025 0
         rotation -0.9999999999999999 0 0 0.32842998874109613
         children [
           DEF WHEEL Transform {
@@ -634,10 +634,10 @@ DEF ROBOT_RED Robot {
         }
       ]
       fieldOfView 1.047
-      width 80
-      height 60
+      width 1280
+      height 720
       antiAliasing TRUE
-      noise 0.04
+      noise 0.01
     }
     DEF LED LED {
       translation 0 0.08 0
