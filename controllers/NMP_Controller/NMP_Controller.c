@@ -37,41 +37,47 @@ int main(int argc, char **argv) {
   //  ds->enable(timeStep);
   WbDeviceTag lidar = wb_robot_get_device("lidar");
   
-  //lidar *lidar = robot->getlidar("lidar");
-  
+ 
   WbDeviceTag lmotor = wb_robot_get_device("left wheel motor");
   WbDeviceTag rmotor = wb_robot_get_device("right wheel motor");
 
-  //Motor *lmotor = robot->getMotor("left wheel motor");
-  //Motor *rmotor = robot->getMotor("right wheel motor");
   
+  /*
+  frontLeftDs is the left sensor closest to the front
+  frontRightDs is the right sensor closest to the front
+  */
   WbDeviceTag frontLeftDs = wb_robot_get_device("ds2");
   WbDeviceTag frontRightDs = wb_robot_get_device("ds1");
   
-  //DistanceSensor *frontLeftDs = robot->getDistanceSensor("ds2");
-  //DistanceSensor *frontRightDs = robot->getDistanceSensor("ds1");
   
+  
+  /*
+  leftDs is the left most sensor
+  rightDs is the right most sensor
+  */
   WbDeviceTag leftDs = wb_robot_get_device("ds3");
   WbDeviceTag rightDs = wb_robot_get_device("ds0");
   
-  //DistanceSensor *leftDs = robot->getDistanceSensor("ds3");
-  //DistanceSensor *rightDs = robot->getDistanceSensor("ds0");
   
+  
+  /*
+  leftFrontLeftDs is the middle left sensor
+  rightFrontRightDs is the middle right sensor
+  */
   WbDeviceTag leftFrontLeftDs = wb_robot_get_device("ds5");
   WbDeviceTag rightFrontRightDs = wb_robot_get_device("ds4");
   
-  //DistanceSensor *leftFrontLeftDs = robot->getDistanceSensor("ds5");
-  //DistanceSensor *rightFrontRightDs= robot->getDistanceSensor("ds4");
+  
+  
   
   WbDeviceTag cam = wb_robot_get_device("camera");
   WbDeviceTag accelerometer = wb_robot_get_device("accelerometer");
   
-  //Camera * cam = robot->getCamera("camera");
-  //Accelerometer * accelerometer = robot->getAccelerometer("accelerometer");
+  
   
   WbDeviceTag gyro = wb_robot_get_device("gyro");
   
-  //Gyro *gyro = robot->getGyro("gyro");
+
 
   // get the time step of the current world.
   int timeStep = (int)wb_robot_get_basic_time_step();
@@ -79,46 +85,33 @@ int main(int argc, char **argv) {
 
   // Enable the sensors, feel free to change the sampling rate
   wb_lidar_enable(lidar, 50);
-  //lidar->enable(50);
+  
   
   wb_distance_sensor_enable(frontLeftDs, 100);
-  //frontLeftDs->enable(100);
   
   wb_distance_sensor_enable(frontRightDs, 100);
-  //frontRightDs->enable(100);
   
   wb_distance_sensor_enable(leftDs, 100);
-  //leftDs->enable(100);
   
   wb_distance_sensor_enable(rightDs, 100);
-  //rightDs->enable(100);
   
   wb_distance_sensor_enable(leftFrontLeftDs, 100);
-  //leftFrontLeftDs->enable(100);
   
   wb_distance_sensor_enable(rightFrontRightDs, 100);
-  //rightFrontRightDs->enable(100);
   
   wb_accelerometer_enable(accelerometer, 100);
-  //accelerometer->enable(100);
   
   wb_gyro_enable(gyro, 100);
-  //gyro->enable(100);
   
   wb_camera_enable(cam, 50);
-  //cam->enable(50);
   
   wb_motor_set_position(lmotor, INFINITY);
-  //lmotor->setPosition(INFINITY);
   
   wb_motor_set_position(rmotor, INFINITY);
-  //rmotor->setPosition(INFINITY);
   
   wb_motor_set_velocity(lmotor, 0);
-  //lmotor->setVelocity(0);
   
   wb_motor_set_velocity(rmotor, 0);
-  //rmotor->setVelocity(0);
   
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
@@ -127,8 +120,22 @@ int main(int argc, char **argv) {
     // Enter here functions to read sensor data, like:
     //  double val = ds->getValue();
     wb_motor_set_velocity(lmotor, 10);
-    //lmotor->setVelocity(10);
     wb_motor_set_velocity(rmotor, 10);
+    
+    
+    /*
+    int ChckCorn()
+    - returns 0 for intersection
+      returns 1 for left
+      returns 2 for right
+    */
+    
+    /*
+    void Turn() (if ChckCorn returns something)
+    - Turn() turns left or right depending on ChckCorn()
+    */
+    
+    
     //rmotor->setVelocity(10);
      // Process sensor data here.
 
@@ -141,3 +148,5 @@ int main(int argc, char **argv) {
   wb_robot_cleanup();
   return 0;
 }
+
+
