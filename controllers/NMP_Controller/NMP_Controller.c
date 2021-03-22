@@ -18,6 +18,11 @@
 #include <math.h>
 #include <stdio.h>
 
+#define STRAIGHT -1
+#define INTERSECTION 0
+#define TURN_LEFT 1
+#define TURN_RIGHT 2
+#define DISTANCE_RANGE 40
 
 // This is the main program of your controller.
 // It creates an instance of your Robot instance, launches its
@@ -26,6 +31,9 @@
 // a controller program.
 // The arguments of the main function can be specified by the
 // "controllerArgs" field of the Robot node
+
+int checkCorner(double distanceLeft, double distanceRight, double currentLeft, double currentRight);
+
 int main(int argc, char **argv) {
   // create the Robot instance.
   wb_robot_init();
@@ -82,7 +90,6 @@ int main(int argc, char **argv) {
   // get the time step of the current world.
   int timeStep = (int)wb_robot_get_basic_time_step();
 
-
   // Enable the sensors, feel free to change the sampling rate
   wb_lidar_enable(lidar, 50);
   
@@ -113,6 +120,10 @@ int main(int argc, char **argv) {
   
   wb_motor_set_velocity(rmotor, 0);
   
+  double distanceLeft = wb_distance_sensor_get_value(leftDs);
+  double distanceRight = wb_distance_sensor_get_value(rightDs);
+  
+  
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
   while (wb_robot_step(timeStep) != -1) {
@@ -125,10 +136,33 @@ int main(int argc, char **argv) {
     
     /*
     int ChckCorn()
+      leftDs
+      rightDs
+      wb_distance_sensor_get_value(wbdevicetag)
     - returns 0 for intersection
       returns 1 for left
       returns 2 for right
     */
+    
+    
+    double currentLeft = wb_distance_sensor_get_value(leftDs);
+    double currentRight = wb_distance_sensor_get_value(rightDs);
+    
+    //printf("%lf\n", currentLeft);
+    //printf("%lf\n", currentRight);
+    
+    int test = checkCorner(distanceLeft, distanceRight, currentLeft, currentRight);
+    if (test == INTERSECTION) {
+      printf("intersection\n");
+    } else if (test == TURN_LEFT) {
+      printf("turn_left\n");
+    } else if (test == TURN_RIGHT) {
+      printf("turn_right\n");
+    } else {
+      printf("straight\n");
+    }
+    distanceLeft = wb_distance_sensor_get_value(leftDs);
+    distanceRight = wb_distance_sensor_get_value(rightDs);
     
     /*
     void Turn() (if ChckCorn returns something)
@@ -147,6 +181,17 @@ int main(int argc, char **argv) {
 
   wb_robot_cleanup();
   return 0;
+}
+
+int checkCorner(double distanceLeft, double distanceRight, double currentLeft, double currentRight) {
+  if (abs(currentLeft - distanceLeft) > DISTANCE_RANGE && abs(currentRight - distanceRight) > DISTANCE_RANGE) {
+    return INTERSECTION;
+  } else if (abs(currentLeft - distanceLeft) > DISTANCE_RANGE) {
+    return TURN_LEFT;
+  } else if (abs(currentRight - distanceRight) > DISTANCE_RANGE) {
+    return TURN_RIGHT;
+  }
+  return STRAIGHT;
 }
 
 
