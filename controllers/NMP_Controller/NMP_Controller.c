@@ -1,4 +1,4 @@
-// File:       NMP_Controller.c
+// File:          NMP_Controller.c
 // Date:
 // Description:
 // Author:
@@ -17,7 +17,6 @@
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
 
 #define STRAIGHT -1
 #define INTERSECTION 0
@@ -43,7 +42,7 @@ int main(int argc, char **argv) {
    // You should insert a getDevice-like function in order to get the
   // instance of a device of the robot. Something like:
   //  Motor *motor = robot->getMotor("motorname");
-  //  DistanceSensor *ds = robot->getDistanceSensor("dsname");asdfasdf
+  //  DistanceSensor *ds = robot->getDistanceSensor("dsname");
   //  ds->enable(timeStep);
   WbDeviceTag lidar = wb_robot_get_device("lidar");
   
@@ -124,7 +123,7 @@ int main(int argc, char **argv) {
   
 
   int fastVel = 10;
-  int slowVel = 6;
+  int slowVel = 5;
   double leftVel = 10;
   double rightVel = 10;
   
@@ -146,7 +145,7 @@ int main(int argc, char **argv) {
       wb_distance_sensor_get_value(wbdevicetag)
     - returns 0 for intersection
       returns 1 for left
-      returns 2 for rightmk
+      returns 2 for right
     */
     
     double currDist9 = wb_distance_sensor_get_value(leftDs);
@@ -169,6 +168,7 @@ int main(int argc, char **argv) {
     - Turn() turns left or right depending on ChckCorn()
     */
     
+    
     //rmotor->setVelocity(10);
      // Process sensor data here.
 
@@ -176,8 +176,10 @@ int main(int argc, char **argv) {
     //  motor->setPosition(10.0);
   };
 
-  // Enter here exit cleanup code. B
+  // Enter here exit cleanup code.
 
   wb_robot_cleanup();
   return 0;
 }
+
+
