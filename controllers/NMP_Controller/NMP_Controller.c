@@ -1,4 +1,4 @@
-// File:          NMP_Controller.c
+// File:       NMP_Controller.c
 // Date:
 // Description:
 // Author:
@@ -17,12 +17,14 @@
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>
+#include <string.h>
 
 #define STRAIGHT -1
 #define INTERSECTION 0
 #define TURN_LEFT 1
 #define TURN_RIGHT 2
-#define DISTANCE_RANGE 40
+#define DISTANCE_RANGE 50
+#define DRASTIC 200
 
 // This is the main program of your controller.
 // It creates an instance of your Robot instance, launches its
@@ -32,7 +34,7 @@
 // The arguments of the main function can be specified by the
 // "controllerArgs" field of the Robot node
 
-int checkCorner(double distanceLeft, double distanceRight, double currentLeft, double currentRight);
+int checkCorner(double prevDistleft, double prevDistRight, double currDistLeft, double currDistRight);
 
 int main(int argc, char **argv) {
   // create the Robot instance.
@@ -41,7 +43,7 @@ int main(int argc, char **argv) {
    // You should insert a getDevice-like function in order to get the
   // instance of a device of the robot. Something like:
   //  Motor *motor = robot->getMotor("motorname");
-  //  DistanceSensor *ds = robot->getDistanceSensor("dsname");
+  //  DistanceSensor *ds = robot->getDistanceSensor("dsname");asdfasdf
   //  ds->enable(timeStep);
   WbDeviceTag lidar = wb_robot_get_device("lidar");
   
@@ -94,17 +96,17 @@ int main(int argc, char **argv) {
   wb_lidar_enable(lidar, 50);
   
   
-  wb_distance_sensor_enable(frontLeftDs, 100);
+  wb_distance_sensor_enable(frontLeftDs, 1);
   
-  wb_distance_sensor_enable(frontRightDs, 100);
+  wb_distance_sensor_enable(frontRightDs, 1);
   
-  wb_distance_sensor_enable(leftDs, 100);
+  wb_distance_sensor_enable(leftDs, 1);
   
-  wb_distance_sensor_enable(rightDs, 100);
+  wb_distance_sensor_enable(rightDs, 1);
   
-  wb_distance_sensor_enable(leftFrontLeftDs, 100);
+  wb_distance_sensor_enable(leftFrontLeftDs, 1);
   
-  wb_distance_sensor_enable(rightFrontRightDs, 100);
+  wb_distance_sensor_enable(rightFrontRightDs, 1);
   
   wb_accelerometer_enable(accelerometer, 100);
   
@@ -120,9 +122,11 @@ int main(int argc, char **argv) {
   
   wb_motor_set_velocity(rmotor, 0);
   
-  double distanceLeft = wb_distance_sensor_get_value(leftDs);
-  double distanceRight = wb_distance_sensor_get_value(rightDs);
-  
+
+  int fastVel = 10;
+  int slowVel = 6;
+  double leftVel = 10;
+  double rightVel = 10;
   
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
@@ -130,45 +134,40 @@ int main(int argc, char **argv) {
     // Read the sensors:
     // Enter here functions to read sensor data, like:
     //  double val = ds->getValue();
-    wb_motor_set_velocity(lmotor, 10);
-    wb_motor_set_velocity(rmotor, 10);
+    
+    wb_motor_set_velocity(lmotor, leftVel);
+    wb_motor_set_velocity(rmotor, rightVel);
     
     
     /*
     int ChckCorn()
-      leftDs
+      leftDseadfs
       rightDs
       wb_distance_sensor_get_value(wbdevicetag)
     - returns 0 for intersection
       returns 1 for left
-      returns 2 for right
+      returns 2 for rightmk
     */
     
+    double currDist9 = wb_distance_sensor_get_value(leftDs);
+    double currDist3 = wb_distance_sensor_get_value(rightDs);
+    double currDist10 = wb_distance_sensor_get_value(leftFrontLeftDs);
+    double currDist2 = wb_distance_sensor_get_value(rightFrontRightDs);
+    double currDist11 = wb_distance_sensor_get_value(frontLeftDs);
+    double currDist1 = wb_distance_sensor_get_value(frontRightDs);
     
-    double currentLeft = wb_distance_sensor_get_value(leftDs);
-    double currentRight = wb_distance_sensor_get_value(rightDs);
-    
-    //printf("%lf\n", currentLeft);
-    //printf("%lf\n", currentRight);
-    
-    int test = checkCorner(distanceLeft, distanceRight, currentLeft, currentRight);
-    if (test == INTERSECTION) {
-      printf("intersection\n");
-    } else if (test == TURN_LEFT) {
-      printf("turn_left\n");
-    } else if (test == TURN_RIGHT) {
-      printf("turn_right\n");
+    if (currDist9 + currDist10 + currDist11 > currDist1 + currDist2 + currDist3) {
+      leftVel = fastVel;
+      rightVel = slowVel;
     } else {
-      printf("straight\n");
+      leftVel = slowVel;
+      rightVel = fastVel;
     }
-    distanceLeft = wb_distance_sensor_get_value(leftDs);
-    distanceRight = wb_distance_sensor_get_value(rightDs);
     
     /*
     void Turn() (if ChckCorn returns something)
     - Turn() turns left or right depending on ChckCorn()
     */
-    
     
     //rmotor->setVelocity(10);
      // Process sensor data here.
@@ -177,21 +176,8 @@ int main(int argc, char **argv) {
     //  motor->setPosition(10.0);
   };
 
-  // Enter here exit cleanup code.
+  // Enter here exit cleanup code. B
 
   wb_robot_cleanup();
   return 0;
 }
-
-int checkCorner(double distanceLeft, double distanceRight, double currentLeft, double currentRight) {
-  if (abs(currentLeft - distanceLeft) > DISTANCE_RANGE && abs(currentRight - distanceRight) > DISTANCE_RANGE) {
-    return INTERSECTION;
-  } else if (abs(currentLeft - distanceLeft) > DISTANCE_RANGE) {
-    return TURN_LEFT;
-  } else if (abs(currentRight - distanceRight) > DISTANCE_RANGE) {
-    return TURN_RIGHT;
-  }
-  return STRAIGHT;
-}
-
-
