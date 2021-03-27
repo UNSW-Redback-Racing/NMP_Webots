@@ -9,4 +9,4 @@ orthographicViewHeight: 1
 textFiles: 0 "controllers/NMP_Controller/NMP_Controller.c"
 robotWindow: ROBOT_RED
 consoles: Console:All:All
-renderingDevicePerspectives: ROBOT_RED:camera;1;0.308333;0;0
+renderingDevicePerspectives: ROBOT_RED:camera;1;0.453125;0;0

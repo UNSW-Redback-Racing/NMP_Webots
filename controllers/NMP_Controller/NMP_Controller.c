@@ -180,7 +180,7 @@ int main(int argc, char **argv) {
       rightVel = fastVel;
     }
     
-    else if (currDist11 + currDist9 + currDist10 > currDist1 + currDist2 + currDist3) {
+    else if ((currDist11 + currDist9 + currDist10)/10 > (currDist1 + currDist2 + currDist3)/10) {
       leftVel = fastVel;
       rightVel = slowVel;
     }
