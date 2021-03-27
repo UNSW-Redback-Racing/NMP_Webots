@@ -155,7 +155,7 @@ int main(int argc, char **argv) {
     int currDist11 = wb_distance_sensor_get_value(frontLeftDs);
     int currDist1 = wb_distance_sensor_get_value(frontRightDs);
     if(currDist9 > 500 && currDist3 > 500){
-      slowVel = 1;
+      slowVel = 6;
     }else{
       slowVel = 7;
     }
@@ -166,9 +166,14 @@ int main(int argc, char **argv) {
     printf("11dist: %d\n", currDist11);
     printf("1dist: %d\n", currDist1);
     int delta = 60;
-    if(currDist11 > 900 || currDist1 > 900){
-      leftVel = -fastVel;
+    if(currDist11 > 900){  
+      leftVel = fastVel;
       rightVel = -fastVel;
+    }
+    else if(currDist1 > 900){
+      leftVel = -fastVel;
+      rightVel = fastVel;
+    
     }
     else if(fabs((currDist9 + currDist10) - (currDist3 + currDist2))<delta){
       leftVel = fastVel;
