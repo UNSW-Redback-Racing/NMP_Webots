@@ -123,7 +123,7 @@ int main(int argc, char **argv) {
   
 
   int fastVel = 10;
-  int slowVel = 5;
+  int slowVel = 1;
   double leftVel = 10;
   double rightVel = 10;
   
@@ -145,20 +145,41 @@ int main(int argc, char **argv) {
       wb_distance_sensor_get_value(wbdevicetag)
     - returns 0 for intersection
       returns 1 for left
-      returns 2 for right
+      returns 2 for rightmk
     */
     
-    double currDist9 = wb_distance_sensor_get_value(leftDs);
-    double currDist3 = wb_distance_sensor_get_value(rightDs);
-    double currDist10 = wb_distance_sensor_get_value(leftFrontLeftDs);
-    double currDist2 = wb_distance_sensor_get_value(rightFrontRightDs);
-    double currDist11 = wb_distance_sensor_get_value(frontLeftDs);
-    double currDist1 = wb_distance_sensor_get_value(frontRightDs);
+    int currDist9 = wb_distance_sensor_get_value(leftDs);
+    int currDist3 = wb_distance_sensor_get_value(rightDs);
+    int currDist10 = wb_distance_sensor_get_value(leftFrontLeftDs);
+    int currDist2 = wb_distance_sensor_get_value(rightFrontRightDs);
+    int currDist11 = wb_distance_sensor_get_value(frontLeftDs);
+    int currDist1 = wb_distance_sensor_get_value(frontRightDs);
+    if(currDist9 > 500 && currDist3 > 500){
+      slowVel = 1;
+    }else{
+      slowVel = 7;
+    }
+    printf("9dist: %d\n", currDist9);
+    printf("3dist: %d\n", currDist3);
+    printf("10dist: %d\n", currDist10);
+    printf("2dist: %d\n", currDist2);
+    printf("11dist: %d\n", currDist11);
+    printf("1dist: %d\n", currDist1);
+    int delta = 60;
+    if(currDist11 > 900 || currDist1 > 900){
+      leftVel = -fastVel;
+      rightVel = -fastVel;
+    }
+    else if(fabs((currDist9 + currDist10) - (currDist3 + currDist2))<delta){
+      leftVel = fastVel;
+      rightVel = fastVel;
+    }
     
-    if (currDist9 + currDist10 + currDist11 > currDist1 + currDist2 + currDist3) {
+    else if (currDist11 + currDist9 + currDist10 > currDist1 + currDist2 + currDist3) {
       leftVel = fastVel;
       rightVel = slowVel;
-    } else {
+    }
+    else{
       leftVel = slowVel;
       rightVel = fastVel;
     }
