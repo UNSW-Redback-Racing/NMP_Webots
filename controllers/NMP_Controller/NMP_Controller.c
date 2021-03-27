@@ -18,6 +18,12 @@
 #include <math.h>
 #include <stdio.h>
 
+#define STRAIGHT -1
+#define INTERSECTION 0
+#define TURN_LEFT 1
+#define TURN_RIGHT 2
+#define DISTANCE_RANGE 50
+#define DRASTIC 200
 
 // This is the main program of your controller.
 // It creates an instance of your Robot instance, launches its
@@ -26,6 +32,9 @@
 // a controller program.
 // The arguments of the main function can be specified by the
 // "controllerArgs" field of the Robot node
+
+int checkCorner(double prevDistleft, double prevDistRight, double currDistLeft, double currDistRight);
+
 int main(int argc, char **argv) {
   // create the Robot instance.
   wb_robot_init();
@@ -82,22 +91,21 @@ int main(int argc, char **argv) {
   // get the time step of the current world.
   int timeStep = (int)wb_robot_get_basic_time_step();
 
-
   // Enable the sensors, feel free to change the sampling rate
   wb_lidar_enable(lidar, 50);
   
   
-  wb_distance_sensor_enable(frontLeftDs, 100);
+  wb_distance_sensor_enable(frontLeftDs, 1);
   
-  wb_distance_sensor_enable(frontRightDs, 100);
+  wb_distance_sensor_enable(frontRightDs, 1);
   
-  wb_distance_sensor_enable(leftDs, 100);
+  wb_distance_sensor_enable(leftDs, 1);
   
-  wb_distance_sensor_enable(rightDs, 100);
+  wb_distance_sensor_enable(rightDs, 1);
   
-  wb_distance_sensor_enable(leftFrontLeftDs, 100);
+  wb_distance_sensor_enable(leftFrontLeftDs, 1);
   
-  wb_distance_sensor_enable(rightFrontRightDs, 100);
+  wb_distance_sensor_enable(rightFrontRightDs, 1);
   
   wb_accelerometer_enable(accelerometer, 100);
   
@@ -113,22 +121,47 @@ int main(int argc, char **argv) {
   
   wb_motor_set_velocity(rmotor, 0);
   
+
+  int fastVel = 10;
+  int slowVel = 5;
+  double leftVel = 10;
+  double rightVel = 10;
+  
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
   while (wb_robot_step(timeStep) != -1) {
     // Read the sensors:
     // Enter here functions to read sensor data, like:
     //  double val = ds->getValue();
-    wb_motor_set_velocity(lmotor, 10);
-    wb_motor_set_velocity(rmotor, 10);
+    
+    wb_motor_set_velocity(lmotor, leftVel);
+    wb_motor_set_velocity(rmotor, rightVel);
     
     
     /*
     int ChckCorn()
+      leftDseadfs
+      rightDs
+      wb_distance_sensor_get_value(wbdevicetag)
     - returns 0 for intersection
       returns 1 for left
       returns 2 for right
     */
+    
+    double currDist9 = wb_distance_sensor_get_value(leftDs);
+    double currDist3 = wb_distance_sensor_get_value(rightDs);
+    double currDist10 = wb_distance_sensor_get_value(leftFrontLeftDs);
+    double currDist2 = wb_distance_sensor_get_value(rightFrontRightDs);
+    double currDist11 = wb_distance_sensor_get_value(frontLeftDs);
+    double currDist1 = wb_distance_sensor_get_value(frontRightDs);
+    
+    if (currDist9 + currDist10 + currDist11 > currDist1 + currDist2 + currDist3) {
+      leftVel = fastVel;
+      rightVel = slowVel;
+    } else {
+      leftVel = slowVel;
+      rightVel = fastVel;
+    }
     
     /*
     void Turn() (if ChckCorn returns something)
